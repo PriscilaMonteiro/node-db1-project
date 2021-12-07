@@ -19,17 +19,14 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/:id', checkAccountId, (req, res, next) => {
-  // try {
-  //   const account = await Accounts.getById(req.params.id)
-  //   res.json(account)
-  // } catch (err) {
-  //   next(err)
-  // }
   res.status(200).json(req.account);
 })
 
 router.post('/', checkAccountPayload, checkAccountNameUnique, (req, res, next) => {
-  Accounts.create(req.body)
+  Accounts.create({
+    name: req.body.name.trim(),
+    budget: req.body.budget,
+  })
     .then(newAccount => {
       res.status(201).json(newAccount);
     })
