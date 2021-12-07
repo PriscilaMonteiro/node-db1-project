@@ -23,7 +23,7 @@ const accountSchema = yup.object().shape({
     .min(0, 'budget of account is too large or too small')
     .max(1000000, 'budget of account is too large or too small')
     .typeError('name needs to be a string')
-    .required('ame and budget are required'),
+    .required('name and budget are required'),
 })
 
 // function checkAccountPayload(req, res, next) {
