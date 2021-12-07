@@ -1,10 +1,10 @@
 const router = require('express').Router();
 
 const {
-  handleError,
-  // checkAccountId,
-  // checkAccountNameUnique,
-  // checkAccountId,
+  handleError, 
+  checkAccountId,
+  checkAccountNameUnique,
+  checkAccountPayload,
 } = require('./accounts-middleware');
 
 const Accounts = require('./accounts-model');
@@ -18,24 +18,43 @@ router.get('/', (req, res, next) => {
     .catch(next);
 })
 
-router.get('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+router.get('/:id', checkAccountId, (req, res, next) => {
+  // try {
+  //   const account = await Accounts.getById(req.params.id)
+  //   res.json(account)
+  // } catch (err) {
+  //   next(err)
+  // }
+  res.status(200).json(req.account);
 })
 
-router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
+router.post('/', checkAccountPayload, checkAccountNameUnique, (req, res, next) => {
+  Accounts.create(req.body)
+    .then(newAccount => {
+      res.status(201).json(newAccount);
+    })
+    .catch(next);
 })
 
-router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
-});
-
-router.delete('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+router.put(
+  '/:id', 
+  checkAccountId,
+  checkAccountPayload,
+  checkAccountNameUnique, 
+  (req, res, next) => {
+    Accounts.updateById(req.params.id, req.body)
+      .then(updated => {
+        res.status(200).json(updated);
+      })
+      .catch(next);
 })
 
-router.use((err, req, res, next) => { // eslint-disable-line
-  // DO YOUR MAGIC
+router.delete('/:id', checkAccountId, (req, res, next) => {
+  Accounts.deleteById(req.params.id)
+    .then(() =>{
+      res.status(200).json({});
+    })
+    .catch(next);
 })
 
 
